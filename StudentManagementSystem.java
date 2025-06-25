@@ -1,16 +1,18 @@
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 
 class Student {
+    private static Long idCounter = 101L;
     private Long id;
     private String name;
     private double marks;
     private int age;
 
-    public Student(Long id, String name, double marks, int age){
-        this.id = id;
+    public Student(String name, double marks, int age){
+        this.id = idCounter++;
         this.name = name;
         this.marks = marks;
         this.age = age;
@@ -24,6 +26,14 @@ class Student {
         this.name = name;
     }
 
+    public String getName(){
+        return name;
+    }
+
+    public double getMarks(){
+        return marks;
+    }
+
     public void setMarks(double marks){
         this.marks = marks;
     }
@@ -33,7 +43,7 @@ class Student {
     }
 
     public void display() {
-        System.out.println("ID: " + id + ", Name: " + name + ", Marks: " + marks + "Age: " + age);
+        System.out.println("ID: " + id + ", Name: " + name + ", Marks: " + marks + ", Age: " + age);
     }
 }
 
@@ -42,17 +52,18 @@ public class StudentManagementSystem {
     private static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-        int choice;
+    int choice = -1;
 
-        do { 
-            System.out.println("\n**** Student Record Management System ****");
-            System.out.println("1. Add Student");
-            System.out.println("2. View All Students");
-            System.out.println("3. Update Student");
-            System.out.println("4. Delete Student");
-            System.out.println("5. Exit");
-            System.out.println("Enter your choice: ");
+    while (choice != 5) {
+        System.out.println("\n**** Student Record Management System ****");
+        System.out.println("1. Add Student");
+        System.out.println("2. View All Students");
+        System.out.println("3. Update Student");
+        System.out.println("4. Delete Student");
+        System.out.println("5. Exit");
+        System.out.print("Enter your choice: ");
 
+        try {
             choice = sc.nextInt();
 
             switch (choice) {
@@ -60,15 +71,18 @@ public class StudentManagementSystem {
                 case 2 -> viewStudents();
                 case 3 -> updateStudent();
                 case 4 -> deleteStudent();
-                case 5 -> System.out.println("Exting.......");
-                default -> System.out.println("Invalid Choice");
+                case 5 -> System.out.println("Exiting...");
+                default -> System.out.println("Invalid choice. Please select choice between 1 to 5.");
             }
-        } while (choice != 5);
+
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input! Please enter a number.");
+            sc.next();
+        }
     }
+}
 
     public static void addStudent(){
-        System.out.println("Enter id: ");
-        Long id = sc.nextLong();
         sc.nextLine();
 
         System.out.println("Enter name: ");
@@ -80,8 +94,8 @@ public class StudentManagementSystem {
         System.out.println("Enter age: ");
         int age = sc.nextInt();
 
-        students.add(new Student(id, name, marks, age));
-        System.out.println("Student added successfully with id: " + id);
+        students.add(new Student(name, marks, age));
+        System.out.println("Student added successfully. ");
     }
 
     public static  void viewStudents(){
@@ -118,9 +132,10 @@ public class StudentManagementSystem {
                 found = true;
                 break;
             }
-            if(!found){
-                System.out.println("No Student with matching Id: " + id);
-            }
+            
+        }
+        if(!found){
+            System.out.println("No Student with matching Id: " + id);
         }
     }
 
